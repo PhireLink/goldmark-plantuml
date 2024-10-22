@@ -61,12 +61,13 @@ func (u *UML) Renderer(w util.BufWriter, source []byte, node ast.Node, entering 
 			if result, exist := u.buf[hash]; exist {
 				w.Write(result)
 			} else {
-				svg, _ := gouml.UML(raw)
+				svg, err := gouml.UML(raw)
 				if len(u.buf) >= u.MaxLength {
 					u.buf = make(map[string][]byte)
 				}
 				u.buf[hash] = svg
 				w.Write(svg)
+				return ast.WalkContinue, err
 			}
 		}
 	}
